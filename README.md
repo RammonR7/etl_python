@@ -26,12 +26,9 @@ PARAMS_BASE = {
 # EXTRACT (paginação por page)
 # -----------------------------
 
-def extract_openalex_por_pagina(max_pages=10):
-    """
-    Extrai produções científicas da OpenAlex utilizando paginação por página.
-    """
+## Extrai produções científicas da OpenAlex utilizando paginação por página.
+def extract_openalex_por_pagina(max_pages=10): 
     todos_resultados = []
-
     for page in range(1, max_pages + 1):
         params = {
             "mailto": EMAIL,
@@ -39,29 +36,24 @@ def extract_openalex_por_pagina(max_pages=10):
             "page": page,
             "filter": 'title_and_abstract.search:"ciência da informação"'
         }
-
         response = requests.get(BASE_URL, params=params)
         response.raise_for_status()
         data = response.json()
-
         resultados = data.get("results", [])
         if not resultados:
             break
-
         todos_resultados.extend(resultados)
-
     return todos_resultados
 
 # -----------------------------
 # TRANSFORM
 # -----------------------------
 
-def transform_openalex(registros):
-    """
+    '"""
     Normaliza metadados relevantes para análise bibliométrica.
     """
+def transform_openalex(registros):
     linhas = []
-
     for r in registros:
         linhas.append({
             "id": r.get("id"),
@@ -85,7 +77,6 @@ def transform_openalex(registros):
             "open_access": r.get("open_access", {}).get("is_oa"),
             "licenca": r.get("open_access", {}).get("license")
         })
-
     return pd.DataFrame(linhas)
 
 # -----------------------------
